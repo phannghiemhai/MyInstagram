@@ -1,0 +1,60 @@
+<!-- Sart Modal -->
+<div class="modal fade" id="addImageByUpload" tabindex="-1" role="dialog" aria-labelledby="addImageByUploadLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="formUploadImage" class="modal-content img-raised" method="post" 
+              action="/ajax/add-image?type=1" 
+              enctype='multipart/form-data'>
+            <div class="modal-header">
+                <button type="button" 
+                        class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    <i class="material-icons">clear</i>
+                </button>
+                <h4 class="modal-title">Upload Image</h4>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <div class="label-floating">
+                        <label class="control-label">Choose File</label>
+                        <input class="btn" style="background-color: gray;" 
+                               type="file" name="filePath" id="filePath" onchange="onImgUploadSrcChange()"/>
+                    </div>
+                </div>
+                <img id="imgUploadPreview" src="" class="img-rounded" style="width: 100%;"/>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" onclick="sendRequestUploadFile()" class="btn btn-primary">
+                    Add Image
+                </button>
+                <button type="reset" class="btn btn-danger" data-dismiss="modal">Dismiss</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function onImgUploadSrcChange() {
+        // The button where the user chooses the local image to display
+        var file = document.querySelector('input[type=file]').files[0];
+        // FileReader instance
+        var reader = new FileReader();
+
+        // When the image is loaded we will set it as source of
+        // our img tag
+        reader.onloadend = function () {
+            $('#imgUploadPreview').attr("src", reader.result);
+        }
+
+
+        if (file) {
+            // Load image as a base64 encoded URI
+            reader.readAsDataURL(file);
+            $('#btnAddImageByUpload').removeAttr('disabled');
+        } else {
+            $('#imgUploadPreview').attr("src", "");
+            $('#btnAddImageByUpload').attr('disabled', 'disabled');
+        }
+    }
+</script>
+
+<!--  End Modal -->

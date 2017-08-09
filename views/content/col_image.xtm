@@ -1,0 +1,62 @@
+{{#PEOPLE_IMAGE}}
+<div class="btn img-rounded hover_raised" 
+     style="
+     width: 100%;
+     background: url('{{src}}'); 
+     padding-top: {{ratio}}; 
+     padding-left: 0px; padding-right: 0px;
+     -webkit-background-size: contain;
+     -moz-background-size: contain;
+     -o-background-size: contain;
+     background-size: contain;
+     background-repeat: no-repeat;">
+    <div>
+        <div class="btn nav-pills" style="padding-left: 0; padding-right: 0;
+             height: 40px; width: 80%; background: rgba(76, 175, 80, 0.7);"
+             onclick="location.href='index?search={{username}}'">
+            {{username}}  {{timestamp}}
+        </div>
+        <div class="btn nav-pills" id="btnLikeImage_{{id}}" style="padding-left: 0; padding-right: 0; 
+             height: 40px; width: 15%; 
+             background: {{#LIKE}}rgba(37, 37, 37, 0.7);{{/LIKE}}
+             {{#LIKE_ACTIVE}}rgba(255, 37, 37, 0.7);{{/LIKE_ACTIVE}}" onclick="toggleBtnLikeImg(this, {{id}})">
+            <i id="iconLikeImage_{{id}}" class="material-icons" {{#ICON_NONE_DISPLAY}}display: none;{{/ICON_NONE_DISPLAY}}>favorite_border</i>
+            <a id="totalLikeImage_{{id}}" style="color: white; {{#TOTAL_NONE_DISPLAY}}display: none;{{/TOTAL_NONE_DISPLAY}}">{{totalLikeImage}}</a>
+        </div>
+    </div>
+</div>
+{{/PEOPLE_IMAGE}}
+
+{{#HOME_IMAGE}}
+<div class="btn img-rounded hover_raised" 
+     style="
+     width: 100%;
+     background: url('{{src}}'); 
+     padding-top: {{ratio}}; 
+     padding-left: 0px; padding-right: 0px;
+     -webkit-background-size: contain;
+     -moz-background-size: contain;
+     -o-background-size: contain;
+     background-size: contain;
+     background-repeat: no-repeat;">
+    <div>
+        <div class="btn nav-pills" style="padding-left: 0; padding-right: 0;
+             height: 40px; width: 65%; background: rgba(76, 175, 80, 0.7);"
+             onclick="location.href='index?search={{username}}'">
+            {{timestamp}}
+        </div>
+        <div class="btn nav-pills" id="btnLikeHomeImage_{{id}}" style="padding-left: 0; padding-right: 0; 
+             height: 40px; width: 15%; 
+             background: {{#LIKE}}rgba(37, 37, 37, 0.7);{{/LIKE}}
+             {{#LIKE_ACTIVE}}rgba(255, 37, 37, 0.7);{{/LIKE_ACTIVE}}" onclick="toggleBtnLikeImg(this, {{id}})">
+            <i id="iconHomeLikeImage_{{id}}" class="material-icons" {{#ICON_NONE_DISPLAY}}display: none;{{/ICON_NONE_DISPLAY}}>favorite_border</i>
+            <a id="totalLikeHomeImage_{{id}}" style="color: white; {{#TOTAL_NONE_DISPLAY}}display: none;{{/TOTAL_NONE_DISPLAY}}">{{totalLikeImage}}</a>
+        </div>
+        <div class="btn nav-pills" id="btnLikeHomeImage_{{id}}" style="padding-left: 0; padding-right: 0; 
+             height: 40px; width: 15%; 
+             background: rgba(37, 37, 37, 0.7);" onclick="onDeleteImage(this, {{id}})">
+            <i class="material-icons">delete</i>
+        </div>
+    </div>
+</div>
+{{/HOME_IMAGE}}

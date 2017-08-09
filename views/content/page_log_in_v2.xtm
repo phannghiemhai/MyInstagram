@@ -1,0 +1,89 @@
+<body class="signup-page">
+    {{>navigation_bar}}
+    <div class="wrapper">
+        <div class="header header-filter" style="background-image: url('{{STATIC_URL}}/assets/img/city.jpg'); background-size: cover; background-position: top center;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3">
+                        <div class="card card-signup">
+                            <form class="form" method="" action="">
+                                <div class="header header-primary text-center">
+                                    <h4>Sign Up</h4>
+                                    <div class="social-line">
+<!--                                        <a href="#pablo" class="btn btn-simple btn-just-icon">
+                                            <i class="fa fa-facebook-square"></i>
+                                        </a>-->
+                                        <a class="btn btn-simple btn-just-icon" onclick="login()">
+                                            <i class="fa fa-google-plus"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {{>footer}}
+        </div>
+    </div>
+</body>
+<script src="https://apis.google.com/js/platform.js" async defer></script>    
+<script async defer src="https://apis.google.com/js/api.js"></script>
+<meta name="google-signin-scope" content="profile email" />
+<meta name="google-signin-client_id" content="{{clientId}}">
+<!--<div class="g-signin2" data-onsuccess="onSignIn"></div>-->
+<script>
+    function onLoadCallback()
+    {
+        //console.log("onLoadCallback");
+        gapi.client.setApiKey('{{apiKey}}');
+        gapi.client.load('plus', 'v1', function () {});
+    }
+
+    function onSignIn(googleUser) {
+        var profile = googleUser.getBasicProfile();
+        console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+        console.log('Name: ' + profile.getName());
+        console.log('Image URL: ' + profile.getImageUrl());
+        console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+        console.log(profile);
+    }
+
+    function login() {
+        var myParams = {'clientid': '{{clientId}}',
+            'cookiepolicy': 'single_host_origin',
+            'callback': 'loginCallback',
+            'approvalprompt': 'force',
+            'scope': 'https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/plus.profile.emails.read'
+        };
+        gapi.auth.signIn(myParams);
+    }
+
+    function loginCallback(result) {
+        console.log(result['access_token']);
+        console.log("Expire in: " + result["expires_in"]);
+        window.location.href = '/admin/log-in?accessToken=' + result['access_token'];
+        if (result['status']['google_logged_in'])
+        {
+            var request = gapi.client.plus.people.get({'userId': 'me'});
+            var accessToken = result["access_token"];
+            request.execute(function (resp) {
+                var email = '';
+                if (resp['emails'] && resp["emails"][0]["type"] === "account") {
+                    email = resp["emails"][0]["value"];
+                }
+                var userId = resp["id"];
+                var userName = resp["displayName"];
+            });
+        }
+    }
+
+    (function () {
+        var po = document.createElement('script');
+        po.type = 'text/javascript';
+        po.async = true;
+        po.src = 'https://apis.google.com/js/client.js?onload=onLoadCallback';
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(po, s);
+    })();
+</script>

@@ -1,0 +1,59 @@
+<footer class="footer">
+    <div class="container">
+        <nav class="pull-left">
+            <ul>
+                <li>
+                    <a rel="tooltip" title="Homepage" data-placement="bottom" 
+                       href="http://zhaipn.tk" target="_blank" 
+                       class="btn btn-simple btn-just-icon">
+                        <i class="fa fa-home"></i>
+                    </a>
+                </li>
+                <li>
+                    <a rel="tooltip" title="It's me on Facebook" data-placement="bottom" 
+                       href="https://www.facebook.com/nghiemhai.frank" target="_blank" 
+                       class="btn btn-simple btn-just-icon">
+                        <i class="fa fa-facebook-square"></i>
+                    </a>
+                </li>
+                <li>
+                    <a rel="tooltip" title="It's me on Instagram" data-placement="bottom" 
+                       href="https://www.instagram.com/nghiemhai_chel8/" 
+                       target="_blank" class="btn btn-simple btn-just-icon">
+                        <i class="fa fa-instagram"></i>
+                    </a>
+                </li>
+
+            </ul>
+        </nav>
+        <div class="copyright pull-right">
+            I'm <b>Nghiêm Hải Frank</b>, and this Website is mine :3.
+        </div>
+    </div>
+    <script>
+        var clocks = ['clock'{{#CLOCK}}, '{{name}}'{{/CLOCK}}];
+
+        function startTime() {
+            var today = new Date();
+            var h = today.getHours();
+            var m = today.getMinutes();
+            var s = today.getSeconds();
+            m = checkTime(m);
+            s = checkTime(s);
+            for (var i = 0; i < clocks.length; i++){
+                itemClock = document.getElementById(clocks[i])
+                if (itemClock !== null)
+                    itemClock.innerHTML = h + ":" + m + ":" + s;
+            }
+            var t = setTimeout(startTime, 50);
+        }
+        function checkTime(i) {
+            if (i < 10) {
+                i = "0" + i
+            }
+            // add zero in front of numbers < 10
+            return i;
+        }
+        startTime();
+    </script>
+</footer>

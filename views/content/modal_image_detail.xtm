@@ -1,0 +1,55 @@
+<!-- Sart Modal -->
+<div class="modal fade" 
+     id="modalImageDetail" 
+     tabindex="-1" 
+     role="dialog" 
+     aria-labelledby="modalImageDetailLabel" 
+     aria-hidden="true">
+    <!--<div class="modal-dialog">-->
+    <div id="mainModalImageDetail">
+        <div class="modal-content">
+            <div class="modal-body" id='bodyModalImageDetail'>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true"
+                        style="float: right;">
+                    <i class="material-icons">clear</i>
+                </button>
+            </div>
+            <!--            <div class="modal-footer">
+                            <button type="button" id="btnAddImageByLink" class="btn btn-primary" disabled>Add Image</button>
+                            <button type="button" class="btn btn-danger" onclick="onDiscardModal()">Dismiss</button>
+                        </div>-->
+        </div>
+    </div>
+</div>
+
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script>
+    function showImageDetail(src, w, h) {
+        imgDetail = $('#imgDetail');
+        imgDetail.attr("src", src);
+//        console.log(screen.width + " " + $(window).width() + " " + w);
+//        console.log(screen.height + " " + $(window).height() + " " + h);
+        ww = $(window).width() * 90 / 100;
+        if (w > ww) {
+            h = 1.0 * h * ww / w;
+            w = ww;
+        }
+        sizeStr = "width: " + w + "px; height: " + h + "px;";
+        $('#mainModalImageDetail').attr('style', 'margin: auto;' + sizeStr);
+        $('#bodyModalImageDetail').attr('style', "background-image: url('" + src + "');" + sizeStr);
+        $('#modalImageDetail').modal('show');
+        $('#modalImageDetail').focus();
+    }
+
+    $('#modalImageDetail').keyup(function (e) {
+        console.log(e);
+//        window.alert('hidden event fired!');
+    });
+
+    $('#modalImageDetail').on('hidden.bs.modal', function () {
+        window.alert('hidden event fired!');
+        console.log("hidden");
+    });
+</script>
+
+<!--  End Modal -->

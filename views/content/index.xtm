@@ -1,0 +1,391 @@
+<body class="index-page-with-galery-tabs" >
+    {{>navigation_bar}}
+
+    <div class="wrapper">
+        <div class="header header-filter" style="background-image: url('{{STATIC_URL}}/assets/img/bg2.jpeg');">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-8 col-md-offset-2">
+                        <div class="brand">
+                            <h1 id="mainClock">Material Kit.</h1>
+                            <h3>Time is <b>p..a..s..s..i..n..g..</b><br><b>do</b> somethings</h3>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="main main-raised">
+            <div class="profile-content">
+                <div class="container">
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="gallery-tabs">
+                                <div class="nav-align-left">
+                                    <ul class="nav nav-pills" role="tablist">
+                                        <li class="active">
+                                            <a href="#people" role="tab" data-toggle="tab">
+                                                <i class="material-icons">camera</i>
+                                                people
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#home" role="tab" data-toggle="tab">
+                                                <i class="material-icons">palette</i>
+                                                home
+                                            </a>
+                                        </li>
+                                    </ul>
+
+                                    <div class="tab-content gallery">
+                                        <div class="tab-pane active" id="people">
+                                            <div class="row">
+                                                {{#GALLERY_COL}}
+                                                <div id="galery_col_{{gallery_col_num}}" class="col-md-3">
+                                                    {{#BTN_ADD_GALLERY_IMG}}
+                                                    <div class="img-rounded" style="height:0; width:100%; 
+                                                         padding-bottom:100%; margin-bottom: 30px; background-color: cadetblue;">
+                                                        <button class="btn nav-pills square" 
+                                                                style="width:44%; margin: 4% 2% 2% 4%; float: left;"
+                                                                data-toggle="modal" data-target="#addImageByLink">
+                                                            <i class="material-icons">note_add</i> Link
+                                                        </button>
+                                                        <button class="btn nav-pills square" 
+                                                                style="width:44%; margin: 4% 4% 2% 2%; float: right;"
+                                                                data-toggle="modal" data-target="#addImageByUpload">
+                                                            <i class="material-icons">note_add</i> Upload
+                                                        </button>
+                                                    </div>
+                                                    {{/BTN_ADD_GALLERY_IMG}}
+                                                    
+                                                    {{#COL_IMG}}
+                                                    <div class="btn img-rounded hover_raised" 
+                                                         style="
+                                                         width: 100%;
+                                                         background: url('{{src}}'); 
+                                                         padding-top: {{ratio}}; 
+                                                         padding-left: 0px; padding-right: 0px;
+                                                         -webkit-background-size: contain;
+                                                         -moz-background-size: contain;
+                                                         -o-background-size: contain;
+                                                         background-size: contain;
+                                                         background-repeat: no-repeat;">
+                                                        <div>
+                                                            <div class="btn nav-pills" style="padding-left: 0; padding-right: 0;
+                                                                 height: 40px; width: 80%; background: rgba(76, 175, 80, 0.7);"
+                                                                 onclick="location.href='index?search={{username}}'">
+                                                                {{username}}  {{timestamp}}
+                                                            </div>
+                                                            <div class="btn nav-pills" id="btnLikeImage_{{id}}" style="padding-left: 0; padding-right: 0; 
+                                                                 height: 40px; width: 15%; 
+                                                                 background: {{#LIKE}}rgba(37, 37, 37, 0.7);{{/LIKE}}
+                                                                 {{#LIKE_ACTIVE}}rgba(255, 37, 37, 0.7);{{/LIKE_ACTIVE}}" onclick="toggleBtnLikeImg(this, {{id}})">
+                                                                <i id="iconLikeImage_{{id}}" class="material-icons" {{#ICON_NONE_DISPLAY}}display: none;{{/ICON_NONE_DISPLAY}}>favorite_border</i>
+                                                                <a id="totalLikeImage_{{id}}" style="color: white; {{#TOTAL_NONE_DISPLAY}}display: none;{{/TOTAL_NONE_DISPLAY}}">{{totalLikeImage}}</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {{/COL_IMG}}
+                                                </div>
+                                                {{/GALLERY_COL}}
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane text-center" id="home">
+                                            <div class="row">
+                                                {{#HOME_GALLERY_COL}}
+                                                <div id="home_galery_col_{{gallery_col_num}}" class="col-md-3">
+                                                    {{#BTN_ADD_GALLERY_IMG}}
+                                                    <div class="img-rounded" style="height:0; width:100%; 
+                                                         padding-bottom:100%; margin-bottom: 30px; background-color: cadetblue;">
+                                                        <button class="btn nav-pills square" 
+                                                                style="width:44%; margin: 4% 2% 2% 4%; float: left;"
+                                                                data-toggle="modal" data-target="#addImageByLink">
+                                                            <i class="material-icons">note_add</i> Link
+                                                        </button>
+                                                        <button class="btn nav-pills square" 
+                                                                style="width:44%; margin: 4% 4% 2% 2%; float: right;"
+                                                                data-toggle="modal" data-target="#addImageByUpload">
+                                                            <i class="material-icons">note_add</i> Upload
+                                                        </button>
+                                                    </div>
+                                                    {{/BTN_ADD_GALLERY_IMG}}
+                                                    
+                                                    {{#COL_IMG}}
+                                                    <div class="btn img-rounded hover_raised" 
+                                                         style="
+                                                         width: 100%;
+                                                         background: url('{{src}}'); 
+                                                         padding-top: {{ratio}}; 
+                                                         padding-left: 0px; padding-right: 0px;
+                                                         -webkit-background-size: contain;
+                                                         -moz-background-size: contain;
+                                                         -o-background-size: contain;
+                                                         background-size: contain;
+                                                         background-repeat: no-repeat;">
+                                                        <div>
+                                                            <div class="btn nav-pills" style="padding-left: 0; padding-right: 0;
+                                                                 height: 40px; width: 65%; background: rgba(76, 175, 80, 0.7);"
+                                                                 onclick="location.href='index?search={{username}}'">
+                                                                {{timestamp}}
+                                                            </div>
+                                                            <div class="btn nav-pills" id="btnLikeHomeImage_{{id}}" style="padding-left: 0; padding-right: 0; 
+                                                                 height: 40px; width: 15%; 
+                                                                 background: {{#LIKE}}rgba(37, 37, 37, 0.7);{{/LIKE}}
+                                                                 {{#LIKE_ACTIVE}}rgba(255, 37, 37, 0.7);{{/LIKE_ACTIVE}}" onclick="toggleBtnLikeImg(this, {{id}})">
+                                                                <i id="iconLikeHomeImage_{{id}}" class="material-icons" {{#ICON_NONE_DISPLAY}}display: none;{{/ICON_NONE_DISPLAY}}>favorite_border</i>
+                                                                <a id="totalLikeHomeImage_{{id}}" style="color: white; {{#TOTAL_NONE_DISPLAY}}display: none;{{/TOTAL_NONE_DISPLAY}}">{{totalLikeImage}}</a>    
+                                                            </div>
+                                                            <div class="btn nav-pills" id="btnLikeHomeImage_{{id}}" style="padding-left: 0; padding-right: 0; 
+                                                                 height: 40px; width: 15%; 
+                                                                 background: rgba(37, 37, 37, 0.7);" onclick="onDeleteImage(this, {{id}})">
+                                                                <i class="material-icons">delete</i>    
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {{/COL_IMG}}
+                                                </div>
+                                                {{/HOME_GALLERY_COL}}
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane text-center" id="shows">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                </div>
+                                                <div class="col-md-6">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End Profile Tabs -->
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+    {{>footer}}
+    {{>modal_add_image_by_link}}
+    {{>modal_add_image_by_upload}}
+    {{>modal_image_detail}}
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+    $(window).scroll(function() {
+   if($(window).scrollTop() + $(window).height() == $(document).height()) {
+//       alert("bottom!");
+        var tabStr = $('.nav-pills .active').text();
+        var type;
+        if (tabStr.indexOf("people") !== -1) {
+            type = 0;
+        } else if (tabStr.indexOf("home") !== -1) {
+            type = 1;
+        } else {
+            type = 2;
+        }
+        sendRequestGetData(curPages[type] + 1, type);
+   }
+});
+
+$('#searchBar').keypress(function (e) {
+    var key = e.which;
+    if (key == 13) {
+//        alert(this.value);
+        window.location.href = "index?search=" + this.value;
+    }
+});
+
+
+var colHeights = [{{#FIRST_COL_HEIGHT}}{{value}}{{/FIRST_COL_HEIGHT}}{{#COL_HEIGHT}},{{value}}{{/COL_HEIGHT}}];
+var colHomeHeights = [{{#FIRST_HOME_COL_HEIGHT}}{{value}}{{/FIRST_HOME_COL_HEIGHT}}{{#COL_HOME_HEIGHT}},{{value}}{{/COL_HOME_HEIGHT}}];
+ 
+var imgId2ColIdx = [new Map(), new Map()];
+{{#INIT_MAP}}imgId2ColIdx[{{idx}}].set({{key}}, {{value}});
+{{/INIT_MAP}}
+
+var curPages = [1, 1, 1];
+
+function findMinColIdx(type) {
+    idx = 0;
+    if (type == 0) {
+        for(var i = 1; i < colHeights.length; i++) {
+            if (colHeights[idx] > colHeights[i]) {
+                idx = i;
+            }
+        }
+    } else if (type == 1) {
+        for(var i = 1; i < colHomeHeights.length; i++) {
+            if (colHomeHeights[idx] > colHomeHeights[i]) {
+                idx = i;
+            }
+        }
+    }
+    return idx;
+}
+
+function sendRequestGetData(page, type) {
+    xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+//            console.log(this.responseText);
+            res = JSON.parse(this.responseText);
+            if (res['err'] === 0){
+                srces = res['data'];
+//                console.log(src);
+//                window.location.reload();
+                for(var i = 0; i < srces.length; i++) {
+                    div = decodeURIComponent(srces[i]['div']).replace(/\+/g, ' ');
+//                    console.log(div);
+                    var idx = findMinColIdx(type);
+                    if (srces[i]['type'] == 0) {
+                        $('#galery_col_' + idx).append(div);
+                        colHeights[idx] += srces[i]['ratio'];
+                    } else if (srces[i]['type'] == 1) {
+                        $('#home_galery_col_' + idx).append(div);
+                        colHomeHeights[idx] += srces[i]['ratio'];
+                    }
+                    imgId2ColIdx[type].set(srces[i]["id"], idx);
+                }
+                if (srces.length > 0) {
+                    curPages[type] += 1;
+                }
+            } else {
+            }
+        }
+    };
+    var sb = $('#searchBar');
+    var searchKey = sb.attr("value");
+    xhttp.open("POST", "/ajax/load-data?page=" + page + "&type=" + type + "&search=" + searchKey, true);
+    xhttp.send();
+}
+    
+function toggleBtnLikeImg(div, id) {
+    xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+//            console.log(this.responseText);
+            res = JSON.parse(this.responseText);
+            if (res['err'] === 0){
+                data = res['data'];
+                var d0 = $('#btnLikeImage_' + id);
+                var d1 = $('#btnLikeHomeImage_' + id);
+                var i0 = $('#iconLikeImage_' + id);
+                var i1 = $('#iconLikeHomeImage_' + id);
+                var t0 = $('#totalLikeImage_' + id);
+                var t1 = $('#totalLikeHomeImage_' + id);
+                if (data['data'] == 0) {
+                    if (d0 !== undefined) {
+                        d0.css("background", "rgba(37, 37, 37, 0.7)");
+                    }
+                    if (d1 !== undefined) {
+                        d1.css("background", "rgba(37, 37, 37, 0.7)");
+                    }
+                } else {
+                    if (d0 !== undefined) {
+                        d0.css("background", "rgba(255, 37, 37, 0.7)");
+                    }
+                    if (d1 !== undefined) {
+                        d1.css("background", "rgba(255, 37, 37, 0.7)");
+                    }
+                }
+                if (data['totalLike'] === 0) {
+                    if (i0 != undefined) {
+                        i0.css("display", "");
+                    }
+                    if (i1 != undefined) {
+                        i1.css("display", "");
+                    }
+                    if (t0 != undefined) {
+                        t0.css("display", "none");
+                    }
+                    if (t1 != undefined) {
+                        t1.css("display", "none");
+                    }
+                } else if (data['totalLike'] < 100) {
+                    if (i0 != undefined) {
+                        i0.css("display", "");
+                    }
+                    if (i1 != undefined) {
+                        i1.css("display", "");
+                    }
+                    if (t0 != undefined) {
+                        t0.css("display", "");
+                    }
+                    if (t1 != undefined) {
+                        t1.css("display", "");
+                    }
+                } else {
+                    if (i0 != undefined) {
+                        i0.css("display", "none");
+                    }
+                    if (i1 != undefined) {
+                        i1.css("display", "none");
+                    }
+                    if (t0 != undefined) {
+                        t0.css("display", "");
+                    }
+                    if (t1 != undefined) {
+                        t1.css("display", "");
+                    }
+                }
+                
+                var c = data['totalLike'];
+                if (c >= 1000000) {
+                    c = (c / 1000000) + "m";
+                } else if (c >= 1000) {
+                    c = (c / 1000) + "k";
+                }
+                if (t0 != undefined) {
+                    t0.html(c);
+                }
+                if (t1 != undefined) {
+                    t1.html(c);
+                }
+            }
+        }
+    };
+    xhttp.open("POST", "/ajax/like-image?imgId=" + id, true);
+    xhttp.send();
+}
+
+function onDeleteImage(d, id) {
+    var r = confirm("Are you sure?");
+    if (r) {
+        xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                console.log(this.responseText);
+                res = JSON.parse(this.responseText);
+                if (res['err'] === 0) {
+                    data = res['data'];
+                    if (data['err'] === 0) {
+                        var d1 = $('#btnLikeImage_' + id);
+                        $(d).parent().parent().remove();
+                        if (d1 !== undefined) {
+                            $(d1).parent().parent().remove();
+                        }
+                        if (imgId2ColIdx[0].has(id)) {
+                            colHeights[imgId2ColIdx[0].get(id)] -= data["ratio"];
+                            imgId2ColIdx[0].delete(id);
+                        }
+                        if (imgId2ColIdx[1].has(id)) {
+                            colHomeHeights[imgId2ColIdx[1].get(id)] -= data["ratio"];
+                            imgId2ColIdx[1].delete(id);
+                            
+                        }
+                    }
+                }
+            }
+        };
+        xhttp.open("POST", "/ajax/delete-image?id=" + id, true);
+        xhttp.send();
+    }
+}
+    
+</script>

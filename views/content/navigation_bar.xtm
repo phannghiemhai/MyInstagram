@@ -1,0 +1,75 @@
+<!-- Navbar -->
+<nav class="navbar navbar-transparent navbar-fixed-top navbar-color-on-scroll">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-index">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="index">
+                <div class="logo-container">
+                    <div class="logo">
+                        <img src="{{STATIC_URL}}/assets/img/avatar/avatar_small" 
+                             alt="{{email}}" 
+                             rel="tooltip" 
+                             title="{{msg}}" data-placement="bottom" data-html="true">
+                    </div>
+                    <div class="brand" style="width: 100px;">
+                        {{email}}
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="collapse navbar-collapse" id="navigation-index">
+            <ul class="nav navbar-nav navbar-right">
+                <!--                <li>
+                                    <a rel="tooltip" title="Homepage" data-placement="bottom" 
+                                       href="index" target="_blank" 
+                                       class="btn btn-white btn-simple btn-just-icon">
+                                        <i class="fa fa-home"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a rel="tooltip" title="It's me on Facebook" data-placement="bottom" 
+                                       href="https://www.facebook.com/nghiemhai.frank" target="_blank" 
+                                       class="btn btn-white btn-simple btn-just-icon">
+                                        <i class="fa fa-facebook-square"></i>
+                                    </a>
+                                </li>-->
+                <li>
+                    <div>
+                        <input type="text" id="searchBar" class="form-control" placeholder="Search" value="{{searchBar}}"
+                               style="margin: 0px; padding: 0px; color: white;">
+                    </div>
+                </li>
+                {{#LOG_IN}}
+                <li>
+                    <a rel="tooltip" title="Log In" data-placement="bottom" 
+                       onclick="window.location.href = 'log-in'"
+                       onmouseover="this.color = 'red'"
+                       onmouseout="this.color = 'white'"
+                       target="_blank" 
+                       class="btn btn-white btn-simple btn-just-icon">
+                        <i class="fa fa-sign-in" aria-hidden="true"></i>
+                    </a>
+                </li>
+                {{/LOG_IN}}
+                {{#LOG_OUT}}
+                <li>
+                    <a rel="tooltip" title="log out" data-placement="bottom" 
+                       onclick="window.location.href = 'log-out'"
+                       onmouseover="this.color = 'red'"
+                       onmouseout="this.color = 'white'"
+                       target="_blank" 
+                       class="btn btn-white btn-simple btn-just-icon">
+                        <i class="fa fa-sign-out" aria-hidden="true"></i>
+                    </a>
+                </li>
+                {{/LOG_OUT}}
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- End Navbar -->
