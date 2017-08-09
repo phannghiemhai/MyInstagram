@@ -1,0 +1,1 @@
+-Dappconfig=conf -Denvironment=production  -Dzport=8028 -Dapppath="./"
