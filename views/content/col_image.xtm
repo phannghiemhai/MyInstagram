@@ -24,6 +24,7 @@
             <a id="totalLikeImage_{{id}}" style="color: white; {{#TOTAL_NONE_DISPLAY}}display: none;{{/TOTAL_NONE_DISPLAY}}">{{totalLikeImage}}</a>
         </div>
     </div>
+    <div class="ripple-container"></div>
 </div>
 {{/PEOPLE_IMAGE}}
 

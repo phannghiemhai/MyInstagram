@@ -90,6 +90,13 @@
                                                     {{/COL_IMG}}
                                                 </div>
                                                 {{/GALLERY_COL}}
+                                                {{#BTN_LOAD_PEOPLE}}
+                                                <div class ="col-md-3">
+                                                    <div class="btn nav-pills col-md-3" style="width: 100%;" onclick="loadData()">
+                                                        <i class="material-icons">expand_more</i>
+                                                    </div>
+                                                </div>
+                                                {{/BTN_LOAD_PEOPLE}}
                                             </div>
                                         </div>
                                         <div class="tab-pane text-center" id="home">
@@ -147,6 +154,13 @@
                                                     {{/COL_IMG}}
                                                 </div>
                                                 {{/HOME_GALLERY_COL}}
+                                                {{#BTN_LOAD_HOME}}
+                                                <div class ="col-md-3">
+                                                    <div class="btn nav-pills col-md-3" style="width: 100%;" onclick="loadData()">
+                                                        <i class="material-icons">expand_more</i>
+                                                    </div>
+                                                </div>
+                                                {{/BTN_LOAD_HOME}}
                                             </div>
                                         </div>
                                         <div class="tab-pane text-center" id="shows">
@@ -177,20 +191,25 @@
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script type="text/javascript">
-    $(window).scroll(function() {
-   if($(window).scrollTop() + $(window).height() == $(document).height()) {
+    
+function loadData() {
+    var tabStr = $('.nav-pills .active').text();
+    var type;
+    if (tabStr.indexOf("people") !== -1) {
+        type = 0;
+    } else if (tabStr.indexOf("home") !== -1) {
+        type = 1;
+    } else {
+        type = 2;
+    }
+    sendRequestGetData(curPages[type] + 1, type);
+}
+    
+$(window).scroll(function() {
+    if($(window).scrollTop() + $(window).height() >= $(document).height()) {
 //       alert("bottom!");
-        var tabStr = $('.nav-pills .active').text();
-        var type;
-        if (tabStr.indexOf("people") !== -1) {
-            type = 0;
-        } else if (tabStr.indexOf("home") !== -1) {
-            type = 1;
-        } else {
-            type = 2;
-        }
-        sendRequestGetData(curPages[type] + 1, type);
-   }
+        loadData();
+    }
 });
 
 $('#searchBar').keypress(function (e) {
@@ -244,10 +263,10 @@ function sendRequestGetData(page, type) {
 //                    console.log(div);
                     var idx = findMinColIdx(type);
                     if (srces[i]['type'] == 0) {
-                        $('#galery_col_' + idx).append(div);
+                        $('#galery_col_' + idx).append($(div));
                         colHeights[idx] += srces[i]['ratio'];
                     } else if (srces[i]['type'] == 1) {
-                        $('#home_galery_col_' + idx).append(div);
+                        $('#home_galery_col_' + idx).append($(div));
                         colHomeHeights[idx] += srces[i]['ratio'];
                     }
                     imgId2ColIdx[type].set(srces[i]["id"], idx);
@@ -347,6 +366,8 @@ function toggleBtnLikeImg(div, id) {
                 if (t1 != undefined) {
                     t1.html(c);
                 }
+            } else {
+                window.location.href = "/log-in";
             }
         }
     };
