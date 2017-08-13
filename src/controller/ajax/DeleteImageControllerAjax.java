@@ -12,8 +12,8 @@ import utils.http.JSONResponse;
 import utils.http.RequestInfo;
 import utils.http.ResponseOutput;
 import utils.http.ResponseType;
-import modal.ModelImage;
-import modal.ModelLikeImage;
+import model.ModelImage;
+import model.ModelLikeImage;
 import org.json.JSONObject;
 
 /**

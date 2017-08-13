@@ -7,7 +7,7 @@ package controller.ajax;
 
 import controller.AbstractController;
 import java.util.Set;
-import modal.ModelLikeImage;
+import model.ModelLikeImage;
 import org.json.JSONException;
 import org.json.JSONObject;
 import utils.Constants;
