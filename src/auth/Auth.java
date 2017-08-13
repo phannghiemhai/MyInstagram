@@ -14,7 +14,7 @@ import java.util.List;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import modal.ModalLikeImage;
+import modal.ModelLikeImage;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.message.BasicNameValuePair;
@@ -67,7 +67,7 @@ public class Auth {
 //                    req.setAttribute("userId", userId);
                     request.account = new AccountEntity(0, userId, email, "", 
                             AccountEntity.AccountType.GUEST, null);
-                    request.account.likedImgIds = ModalLikeImage.getInstance().getEntities(email);
+                    request.account.likedImgIds = ModelLikeImage.getInstance().getEntities(email);
                     return true;
                 }
             }

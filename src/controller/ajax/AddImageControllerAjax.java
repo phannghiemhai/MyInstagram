@@ -19,7 +19,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
 import javax.imageio.ImageIO;
-import modal.ModalImage;
+import modal.ModelImage;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileItemFactory;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
@@ -63,7 +63,7 @@ public class AddImageControllerAjax extends AbstractController {
 
     private String processAddImage(RequestInfo request, ImageEntity entity) throws UnsupportedEncodingException {
         entity.updateSize();
-        int id = ModalImage.getInstance().insert(entity);
+        int id = ModelImage.getInstance().insert(entity);
         if (id > 0) {
             return "\"" + URLEncoder.encode(entity.src, "UTF-8") + "\"";
         }
@@ -91,7 +91,7 @@ public class AddImageControllerAjax extends AbstractController {
                                         filename, 1, "", "", System.currentTimeMillis(),
                                         image.getWidth(), image.getHeight(),
                                         1f * image.getHeight() / image.getWidth());
-                                ModalImage.getInstance().insert(entity);
+                                ModelImage.getInstance().insert(entity);
                                 request.sendRedirect(Constants.AccessOption.INDEX.mainTarget);
                                 return "{\"err\" : 0, \"msg\" : \"Success\"}";
                             }

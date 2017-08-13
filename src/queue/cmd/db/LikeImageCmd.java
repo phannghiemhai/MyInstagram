@@ -5,7 +5,7 @@
  */
 package queue.cmd.db;
 
-import DAO.ModalLikeImageDAO;
+import DAO.ModelLikeImageDAO;
 import entity.DAO.LikeImageEntity;
 import queue.cmd.IQueueCmd;
 
@@ -29,16 +29,16 @@ public class LikeImageCmd implements IQueueCmd {
     public void execute() {
         if (null != _type) switch (_type) {
             case INSERT:
-                ModalLikeImageDAO.getInstance().insert(_entity);
+                ModelLikeImageDAO.getInstance().insert(_entity);
                 break;
             case UPDATE:
-                ModalLikeImageDAO.getInstance().update(_entity);
+                ModelLikeImageDAO.getInstance().update(_entity);
                 break;
             case DELETE:
-                ModalLikeImageDAO.getInstance().delete(_entity);
+                ModelLikeImageDAO.getInstance().delete(_entity);
                 break;
             case DELETE_BY_ID:
-                ModalLikeImageDAO.getInstance().delete(_entity.imageId);
+                ModelLikeImageDAO.getInstance().delete(_entity.imageId);
                 break;
             default:
                 break;

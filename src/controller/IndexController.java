@@ -16,8 +16,8 @@ import hapax.TemplateDataDictionary;
 import hapax.TemplateDictionary;
 import java.util.Collection;
 import java.util.Set;
-import modal.ModalImage;
-import modal.ModalLikeImage;
+import modal.ModelImage;
+import modal.ModelLikeImage;
 import org.apache.commons.lang.StringUtils;
 import utils.Constants;
 import utils.Utils;
@@ -59,14 +59,20 @@ public class IndexController extends AbstractController {
             String key = request.getParamStr("search");
             Collection<ImageEntity> entities = null;
             if (StringUtils.isBlank(key)) {
-                entities = ModalImage.getInstance().getEntities(1, Constants.Gallery.itemPerPage);
+                entities = ModelImage.getInstance().getEntities(1, Constants.Gallery.itemPerPage);
             } else {
-                entities = ModalImage.getInstance().getEntities(key, 1, Constants.Gallery.itemPerPage);
+                entities = ModelImage.getInstance().getEntities(key, 1, Constants.Gallery.itemPerPage);
                 dict.setVariable("searchBar", key);
             }
-            float[] colHeights = new float[Constants.Gallery.nCols];
-            TemplateDataDictionary[] colDicts = new TemplateDataDictionary[Constants.Gallery.nCols];
-            for (int i = 0; i < Constants.Gallery.nCols; i++) {
+//            System.out.println(request.getPlatform());
+            int nCols = Constants.Gallery.nCols;
+            if (request.getPlatform().isPhone()) {
+                nCols = 1;
+                dict.showSection("BTN_LOAD_PEOPLE");
+            }
+            float[] colHeights = new float[nCols];
+            TemplateDataDictionary[] colDicts = new TemplateDataDictionary[nCols];
+            for (int i = 0; i < nCols; i++) {
                 colHeights[i] = 0;
                 colDicts[i] = dict.addSection("GALLERY_COL");
                 colDicts[i].setVariable("gallery_col_num", String.valueOf(i));
@@ -82,7 +88,7 @@ public class IndexController extends AbstractController {
                 imgDict.setVariable("src", entity.src);
                 imgDict.setVariable("ratio", String.valueOf(entity.ratio * 100 + "%"));
                 imgDict.setVariable("username", entity.userId);
-                Set<String> sE = ModalLikeImage.getInstance().getEntities(entity.id);
+                Set<String> sE = ModelLikeImage.getInstance().getEntities(entity.id);
                 if (sE.size() >= 100) {
                     imgDict.showSection("ICON_NONE_DISPLAY");
                 }
@@ -104,7 +110,7 @@ public class IndexController extends AbstractController {
                 initMap.setVariable("idx", String.valueOf(0));
             }
             dict.addSection("FIRST_COL_HEIGHT").setVariable("value", String.valueOf(colHeights[0]));
-            for (int i = 1; i < Constants.Gallery.nCols; i++) {
+            for (int i = 1; i < nCols; i++) {
                 dict.addSection("COL_HEIGHT").setVariable("value", String.valueOf(colHeights[i]));
             }
         } catch (Exception ex) {
@@ -117,11 +123,15 @@ public class IndexController extends AbstractController {
             if (!request.isLoggedIn()) {
                 return;
             }
-            Collection<ImageEntity> entities = ModalImage.getInstance().getEntities(request.account.email, 1, Constants.Gallery.itemPerPage);
-
-            float[] colHeights = new float[Constants.Gallery.nCols];
-            TemplateDataDictionary[] colDicts = new TemplateDataDictionary[Constants.Gallery.nCols];
-            for (int i = 0; i < Constants.Gallery.nCols; i++) {
+            Collection<ImageEntity> entities = ModelImage.getInstance().getEntities(request.account.email, 1, Constants.Gallery.itemPerPage);
+            int nCols = Constants.Gallery.nCols;
+            if (request.getPlatform().isPhone()) {
+                nCols = 1;
+                dict.showSection("BTN_LOAD_HOME");
+            }
+            float[] colHeights = new float[nCols];
+            TemplateDataDictionary[] colDicts = new TemplateDataDictionary[nCols];
+            for (int i = 0; i < nCols; i++) {
                 colHeights[i] = 0;
                 colDicts[i] = dict.addSection("HOME_GALLERY_COL");
                 colDicts[i].setVariable("gallery_col_num", String.valueOf(i));
@@ -137,7 +147,7 @@ public class IndexController extends AbstractController {
                 imgDict.setVariable("src", entity.src);
                 imgDict.setVariable("ratio", String.valueOf(entity.ratio * 100 + "%"));
                 imgDict.setVariable("username", entity.userId);
-                Set<String> sE = ModalLikeImage.getInstance().getEntities(entity.id);
+                Set<String> sE = ModelLikeImage.getInstance().getEntities(entity.id);
                 if (sE.size() >= 100) {
                     imgDict.showSection("ICON_NONE_DISPLAY");
                 }
@@ -158,7 +168,7 @@ public class IndexController extends AbstractController {
                 initMap.setVariable("idx", String.valueOf(1));
             }
             dict.addSection("FIRST_HOME_COL_HEIGHT").setVariable("value", String.valueOf(colHeights[0]));
-            for (int i = 1; i < Constants.Gallery.nCols; i++) {
+            for (int i = 1; i < nCols; i++) {
                 dict.addSection("COL_HOME_HEIGHT").setVariable("value", String.valueOf(colHeights[i]));
             }
         } catch (Exception ex) {

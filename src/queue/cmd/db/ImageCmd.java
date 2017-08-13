@@ -5,7 +5,7 @@
  */
 package queue.cmd.db;
 
-import DAO.ModalImageDAO;
+import DAO.ModelImageDAO;
 import entity.DAO.ImageEntity;
 import queue.cmd.IQueueCmd;
 
@@ -29,13 +29,13 @@ public class ImageCmd implements IQueueCmd {
     public void execute() {
         if (null != _type) switch (_type) {
             case INSERT:
-                ModalImageDAO.getInstance().insert(_entity);
+                ModelImageDAO.getInstance().insert(_entity);
                 break;
             case UPDATE:
-                ModalImageDAO.getInstance().update(_entity);
+                ModelImageDAO.getInstance().update(_entity);
                 break;
             case DELETE:
-                ModalImageDAO.getInstance().delete(_entity);
+                ModelImageDAO.getInstance().delete(_entity);
                 break;
             default:
                 break;

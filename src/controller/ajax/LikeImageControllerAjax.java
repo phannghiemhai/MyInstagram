@@ -7,7 +7,7 @@ package controller.ajax;
 
 import controller.AbstractController;
 import java.util.Set;
-import modal.ModalLikeImage;
+import modal.ModelLikeImage;
 import org.json.JSONException;
 import org.json.JSONObject;
 import utils.Constants;
@@ -44,8 +44,8 @@ public class LikeImageControllerAjax extends AbstractController {
     private JSONObject processLikeImage(RequestInfo request, int imgId) {
         JSONObject res = new JSONObject();
         try {
-            Set<String> sE = ModalLikeImage.getInstance().getEntities(imgId);
-            int update = ModalLikeImage.getInstance()
+            Set<String> sE = ModelLikeImage.getInstance().getEntities(imgId);
+            int update = ModelLikeImage.getInstance()
                     .update(request.account.likedImgIds, sE, request.account.email, imgId);
             res.put("err", 1);
             res.put("data", update);

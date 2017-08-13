@@ -12,8 +12,8 @@ import utils.http.JSONResponse;
 import utils.http.RequestInfo;
 import utils.http.ResponseOutput;
 import utils.http.ResponseType;
-import modal.ModalImage;
-import modal.ModalLikeImage;
+import modal.ModelImage;
+import modal.ModelLikeImage;
 import org.json.JSONObject;
 
 /**
@@ -29,7 +29,7 @@ public class DeleteImageControllerAjax extends AbstractController {
             int type = request.getParamInt("type");
             if (request.isLoggedIn()) {
                 int id = request.getParamInt("id");
-                ImageEntity entity = ModalImage.getInstance().getEntity(id);
+                ImageEntity entity = ModelImage.getInstance().getEntity(id);
                 if (entity.userId.equals(request.account.email)) {
                     JSONObject jo = processDeleteImage(request, entity);
                     data = jo.toString();
@@ -46,8 +46,8 @@ public class DeleteImageControllerAjax extends AbstractController {
     private JSONObject processDeleteImage(RequestInfo request, ImageEntity entity) {
         JSONObject res = new JSONObject();
         try {
-            ModalImage.getInstance().delete(entity);
-            ModalLikeImage.getInstance().delete(entity);
+            ModelImage.getInstance().delete(entity);
+            ModelLikeImage.getInstance().delete(entity);
             res.put("err", 0);
             res.put("id", entity.id);
             res.put("ratio", entity.ratio);

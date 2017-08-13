@@ -14,8 +14,8 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.Collection;
 import java.util.Set;
-import modal.ModalImage;
-import modal.ModalLikeImage;
+import modal.ModelImage;
+import modal.ModelLikeImage;
 import org.apache.commons.lang.StringUtils;
 import utils.Constants;
 import utils.RenderUtils;
@@ -53,14 +53,14 @@ public class LoadDataControllerAjax extends AbstractController {
         switch (type) {
             case 0:
                 if (StringUtils.isBlank(key)) {
-                    entities = ModalImage.getInstance().getEntities(page, Constants.Gallery.itemPerPage);
+                    entities = ModelImage.getInstance().getEntities(page, Constants.Gallery.itemPerPage);
                 } else {
-                    entities = ModalImage.getInstance().getEntities(key, page, Constants.Gallery.itemPerPage);
+                    entities = ModelImage.getInstance().getEntities(key, page, Constants.Gallery.itemPerPage);
                 }
                 break;
             case 1:
                 if (request.isLoggedIn()) {
-                    entities = ModalImage.getInstance().getEntities(request.account.email, page, Constants.Gallery.itemPerPage);
+                    entities = ModelImage.getInstance().getEntities(request.account.email, page, Constants.Gallery.itemPerPage);
                 } else {
                     try {
                         request.sendRedirect("log-in");
@@ -88,7 +88,7 @@ public class LoadDataControllerAjax extends AbstractController {
                 dict.setVariable("src", entity.src);
                 dict.setVariable("ratio", String.valueOf(entity.ratio * 100 + "%"));
                 dict.setVariable("username", entity.userId);
-                Set<String> sE = ModalLikeImage.getInstance().getEntities(entity.id);
+                Set<String> sE = ModelLikeImage.getInstance().getEntities(entity.id);
                 if (sE.size() >= 100) {
                     dict.showSection("ICON_NONE_DISPLAY");
                 }

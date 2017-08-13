@@ -18,9 +18,12 @@ import java.util.logging.Logger;
  * @author haipn
  */
 public class Constants {
+
     public static class TimeFormat {
+
         public static String DATETIME_UI_FORMAT = "HH:mm yyyy-MM-dd";
     }
+
     public static class PageMsg {
 
         public static String page404 = "Hi, You are reaching the Beyond, there's nothing there. <b> Click Me</b> to comback!";
@@ -32,8 +35,9 @@ public class Constants {
         public static final int nCols = 4;
         public static final int itemPerPage = 4;
     }
-    
+
     public static class CmdQueue {
+
         public static String name = "MyInstagram";
     }
 
@@ -85,7 +89,7 @@ public class Constants {
             }
             return PAGE404;
         }
-        
+
         public String getRedirectLink(String url) {
             try {
                 return mainTarget + "?url=" + URLEncoder.encode(url, "UTF-8");
@@ -95,15 +99,15 @@ public class Constants {
             return mainTarget;
         }
     }
-    
+
     public enum ErrorCode {
         SUCCESS(0, true, "Success"),
         FAIL(-1, false, "Fail"),
         FAIL_AUTHEN(-1, false, "Fail Authen");
-            
-            public int val;
-            public boolean flag; //success or fail
-            public String des;
+
+        public int val;
+        public boolean flag; //success or fail
+        public String des;
 
         private ErrorCode(int val, boolean flag, String des) {
             this.val = val;
@@ -111,15 +115,53 @@ public class Constants {
             this.des = des;
         }
 
-        
-        
         public ErrorCode findByValue(int val) {
-            for(ErrorCode item : values()) {
-                if (item.val == val){
+            for (ErrorCode item : values()) {
+                if (item.val == val) {
                     return item;
                 }
             }
             return null;
+        }
+    }
+
+    public enum Platform {
+        WINDOWS("windows", false),
+        MAC("mac", false),
+        UNIX("x11", false),
+        ANDROID("android", true),
+        IPHONE("iphone", true),
+        UNKNOWN("unknown", false);
+        ;
+        private String des;
+        private boolean isPhone;
+
+        private Platform(String des, boolean isPhone) {
+            this.des = des;
+            this.isPhone = isPhone;
+        }
+
+        public String getDes() {
+            return des;
+        }
+
+        public boolean isPhone() {
+            return isPhone;
+        }
+
+        @Override
+        public String toString() {
+            return des;
+        }
+    }
+
+    public enum Browser {
+
+        ;
+        private String des;
+
+        private Browser(String des) {
+            this.des = des;
         }
     }
 }
