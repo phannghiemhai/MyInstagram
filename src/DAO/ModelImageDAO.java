@@ -8,6 +8,7 @@ package DAO;
 import entity.DAO.ImageEntity;
 import entity.db.DbConnectorEntity;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import utils.Config;
@@ -119,7 +120,7 @@ public class ModelImageDAO {
     }
 
     public Collection<ImageEntity> getEntities(String select, String where, String groupBy, String having, String orderBy, int limit) {
-        Collection<ImageEntity> res = new LinkedList<>();
+        Collection<ImageEntity> res = new ArrayList<>();
         DbConnectorEntity ce = new DbConnectorEntity();
         try {
             if (!_connector.openConnection(ce)) {
@@ -141,7 +142,7 @@ public class ModelImageDAO {
         return res;
     }
 
-    public ImageEntity getEntity(ImageEntity entity) {
+    public ImageEntity getEntity(int id) {
         DbConnectorEntity ce = new DbConnectorEntity();
         try {
             if (!_connector.openConnection(ce)) {
@@ -150,7 +151,7 @@ public class ModelImageDAO {
             String sql = BuildQueryString.buildSelectByKeyQuery(TABLE_NAME, TABLE_PRIMARY_KEYS);
             ce.stmt = ce.conn.prepareStatement(sql);
             int idx = 1;
-            entity.setPrimaryKeyParameters(ce.stmt, idx);
+            ce.stmt.setInt(idx++, id);
             ResultSet rs = ce.executeQuery();
 //            conn.commit();
             if (rs.next()) {

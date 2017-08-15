@@ -9,12 +9,12 @@ import DAO.*;
 import entity.DAO.ImageEntity;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import queue.QueueManager;
 import queue.cmd.db.ImageCmd;
 import utils.Configuration;
+import utils.Constants;
+import utils.RedisKey;
 
 /**
  *
@@ -23,33 +23,10 @@ import utils.Configuration;
 public class ModelImage {
 
     private static ModelImage _instance = null;
-    private List<Integer> _imageIds;
-    private Map<Integer, ImageEntity> _images;
-    private Map<String, List<Integer>> _userId2Images;
     private int _seq;
 
     private ModelImage() {
-        _imageIds = new ArrayList<>();
-        _images = new HashMap<>();
-        _userId2Images = new HashMap<>();
-        Collection<ImageEntity> entities = ModelImageDAO.getInstance().getEntities(null, null, null, null, "id ASC", 0);
-        for (ImageEntity entity : entities) {
-            _imageIds.add(entity.id);
-            _images.put(entity.id, entity);
-            insertToMap(entity);
-        }
         _seq = ModelImageDAO.getInstance().getSeq();
-    }
-
-    private void insertToMap(ImageEntity entity) {
-        List<Integer> images = null;
-        if (_userId2Images.containsKey(entity.userId)) {
-            images = _userId2Images.get(entity.userId);
-        } else {
-            images = new ArrayList<>();
-            _userId2Images.put(entity.userId, images);
-        }
-        images.add(entity.id);
     }
 
     public static ModelImage getInstance() {
@@ -59,12 +36,44 @@ public class ModelImage {
         return _instance;
     }
 
+    private String getListImagesKey() {
+        return RedisKey.Image.listImagesKey;
+    }
+
+    private String getListImagesByUserIdKey(String userId) {
+        return String.format(RedisKey.Image.listImagesByUserIdKey, userId);
+    }
+
+    private String getImageEntityKey(int imageId) {
+        return String.format(RedisKey.Image.imageEntityKey, imageId);
+    }
+
+    private String getImageSeq() {
+        return RedisKey.Image.imageSeq;
+    }
+
     public int insert(ImageEntity entity) {
         if (entity.isValidImg()) {
             entity.id = ++_seq;
-            _imageIds.add(entity.id);
-            _images.put(entity.id, entity);
-            insertToMap(entity);
+
+            String imageEntityKey = getImageEntityKey(entity.id);
+            ModelRedis.getInstance().set(imageEntityKey, entity.toString());
+            ModelRedis.getInstance().expire(imageEntityKey, RedisKey.Image.DEFAUT_EXPIRE_TIME);
+
+            String listImagesKey = getListImagesKey();
+            if (!ModelRedis.getInstance().exists(listImagesKey)) {
+                getEntities(1, Constants.Gallery.itemPerPage);
+            }
+            ModelRedis.getInstance().lpush(listImagesKey, String.valueOf(entity.id));
+            ModelRedis.getInstance().expire(listImagesKey, RedisKey.Image.DEFAUT_EXPIRE_TIME);
+
+            String listImagesByUserIdKey = getListImagesByUserIdKey(entity.userId);
+            if (!ModelRedis.getInstance().exists(listImagesByUserIdKey)) {
+                getEntities(entity.userId, 1, Constants.Gallery.itemPerPage);
+            }
+            ModelRedis.getInstance().lpush(listImagesByUserIdKey, String.valueOf(entity.id));
+            ModelRedis.getInstance().expire(listImagesByUserIdKey, RedisKey.Image.DEFAUT_EXPIRE_TIME);
+
             ImageCmd cmd = new ImageCmd(entity, ImageCmd.TYPES.INSERT);
             QueueManager.getInstance(Configuration.CmdQueue.QUEUE_NAME).put(cmd);
             return 1;
@@ -73,8 +82,10 @@ public class ModelImage {
     }
 
     public int update(ImageEntity entity) {
-        if (_images.containsKey(entity.id)) {
-            _images.put(entity.id, entity);
+        if (entity.id > 0) {
+            String imageEntityKey = getImageEntityKey(entity.id);
+            ModelRedis.getInstance().set(imageEntityKey, entity.toString());
+            ModelRedis.getInstance().expire(imageEntityKey, RedisKey.Image.DEFAUT_EXPIRE_TIME);
             ImageCmd cmd = new ImageCmd(entity, ImageCmd.TYPES.UPDATE);
             QueueManager.getInstance(Configuration.CmdQueue.QUEUE_NAME).put(cmd);
             return 1;
@@ -83,23 +94,10 @@ public class ModelImage {
     }
 
     public int delete(ImageEntity entity) {
-        if (_images.containsKey(entity.id)) {
-            for (int i = 0; i < _images.size(); i++) {
-                if (_imageIds.get(i) == entity.id) {
-                    _imageIds.remove(i);
-                    break;
-                }
-            }
-            if (_userId2Images.containsKey(entity.userId)) {
-                List<Integer> entities = _userId2Images.get(entity.userId);
-                for (int i = 0; i < entities.size(); i++) {
-                    if (entities.get(i) == entity.id) {
-                        entities.remove(i);
-                        break;
-                    }
-                }
-            }
-            _images.remove(entity.id);
+        if (entity.id > 0) {
+            ModelRedis.getInstance().lrem(getListImagesKey(), 1, String.valueOf(entity.id));
+            ModelRedis.getInstance().lrem(getListImagesByUserIdKey(entity.userId), 1, String.valueOf(entity.id));
+            ModelRedis.getInstance().del(getImageEntityKey(entity.id));
             ImageCmd cmd = new ImageCmd(entity, ImageCmd.TYPES.DELETE);
             QueueManager.getInstance(Configuration.CmdQueue.QUEUE_NAME).put(cmd);
             return 1;
@@ -112,16 +110,29 @@ public class ModelImage {
         if (page <= 0) {
             return res;
         }
-        int startOffset = _imageIds.size() - 1 - (page - 1) * itemsPerPage;
-        if (startOffset < 0) {
-            return res;
-        }
-        for (int i = 0; i < itemsPerPage; i++) {
-            int idx = startOffset - i;
-            if (idx < 0) {
-                break;
+        String listImagesKey = getListImagesKey();
+        if (!ModelRedis.getInstance().exists(listImagesKey)) {
+            Collection<ImageEntity> entities = ModelImageDAO.getInstance()
+                    .getEntities(null, null, null, null, "id DESC", 0);
+            for (ImageEntity entity : entities) {
+                String imageEntityKey = getImageEntityKey(entity.id);
+                ModelRedis.getInstance().rpush(listImagesKey, String.valueOf(entity.id));
+                ModelRedis.getInstance().expire(listImagesKey, RedisKey.Image.DEFAUT_EXPIRE_TIME);
+                if (res.size() < itemsPerPage) {
+                    res.add(entity);
+                    if (!ModelRedis.getInstance().exists(imageEntityKey)) {
+                        ModelRedis.getInstance().set(imageEntityKey, entity.toString());
+                        ModelRedis.getInstance().expire(imageEntityKey, RedisKey.Image.DEFAUT_EXPIRE_TIME);
+                    }
+                }
             }
-            res.add(_images.get(_imageIds.get(idx)));
+        } else {
+            List<String> ids = ModelRedis.getInstance().lrange(listImagesKey, (page - 1) * (itemsPerPage), page * itemsPerPage - 1);
+            for (String idStr : ids) {
+                int id = Integer.valueOf(idStr);
+                ImageEntity entity = getEntity(id);
+                res.add(entity);
+            }
         }
         return res;
     }
@@ -131,26 +142,45 @@ public class ModelImage {
         if (page <= 0) {
             return res;
         }
-        if (_userId2Images.containsKey(userId)) {
-            List<Integer> entities = _userId2Images.get(userId);
-            int startOffset = entities.size() - 1 - (page - 1) * itemsPerPage;
-            if (startOffset < 0) {
-                return res;
-            }
-            for (int i = 0; i < itemsPerPage; i++) {
-                int idx = startOffset - i;
-                if (idx < 0) {
-                    break;
+        String listImagesByUserIdKey = getListImagesByUserIdKey(userId);
+        if (!ModelRedis.getInstance().exists(listImagesByUserIdKey)) {
+            Collection<ImageEntity> entities = ModelImageDAO.getInstance()
+                    .getEntities(null, "user_id = '" + userId + "'", null, null, "id DESC", 0);
+            for (ImageEntity entity : entities) {
+                String imageEntityKey = getImageEntityKey(entity.id);
+                ModelRedis.getInstance().rpush(listImagesByUserIdKey, String.valueOf(entity.id));
+                ModelRedis.getInstance().expire(listImagesByUserIdKey, RedisKey.Image.DEFAUT_EXPIRE_TIME);
+                if (res.size() < itemsPerPage) {
+                    res.add(entity);
+                    if (!ModelRedis.getInstance().exists(imageEntityKey)) {
+                        ModelRedis.getInstance().set(imageEntityKey, entity.toString());
+                        ModelRedis.getInstance().expire(imageEntityKey, RedisKey.Image.DEFAUT_EXPIRE_TIME);
+                    }
                 }
-                res.add(_images.get(entities.get(idx)));
+            }
+        } else {
+            List<String> ids = ModelRedis.getInstance().lrange(listImagesByUserIdKey, (page - 1) * (itemsPerPage), page * itemsPerPage - 1);
+            for (String idStr : ids) {
+                int id = Integer.valueOf(idStr);
+                ImageEntity entity = getEntity(id);
+                res.add(entity);
             }
         }
         return res;
     }
 
     public ImageEntity getEntity(int id) {
-        if (_images.containsKey(id)) {
-            return _images.get(id);
+        String imageEntityKey = getImageEntityKey(id);
+        if (ModelRedis.getInstance().exists(imageEntityKey)) {
+            String str = ModelRedis.getInstance().get(imageEntityKey);
+            return ImageEntity.fromJSON(str);
+        } else {
+            ImageEntity entity = ModelImageDAO.getInstance().getEntity(id);
+            if (entity != null) {
+                ModelRedis.getInstance().set(imageEntityKey, entity.toString());
+                ModelRedis.getInstance().expire(imageEntityKey, RedisKey.Image.DEFAUT_EXPIRE_TIME);
+                return entity;
+            }
         }
         return null;
     }
